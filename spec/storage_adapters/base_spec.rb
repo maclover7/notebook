@@ -6,7 +6,7 @@ describe Notebook::StorageAdapters::Base do
 
   describe "#delete" do
     it "raises not implemented error" do
-      storage_adapter = NotCompliantAdapter.new
+      storage_adapter = NotCompliantAdapter.new(double)
 
       expect do
         storage_adapter.delete
@@ -19,7 +19,7 @@ describe Notebook::StorageAdapters::Base do
 
   describe "#get" do
     it "raises not implemented error" do
-      storage_adapter = NotCompliantAdapter.new
+      storage_adapter = NotCompliantAdapter.new(double)
 
       expect do
         storage_adapter.get
@@ -32,7 +32,7 @@ describe Notebook::StorageAdapters::Base do
 
   describe "#upload" do
     it "raises not implemented error" do
-      storage_adapter = NotCompliantAdapter.new
+      storage_adapter = NotCompliantAdapter.new(double)
 
       expect do
         storage_adapter.upload

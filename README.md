@@ -24,7 +24,20 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+gem "notebook"
+```
+
+```
+file = File.read("avatar.jpg")
+Notebook.storage_adapter = :filesystem
+attachment = Notebook::Attachment.new(file)
+
+attachment.upload
+
+# get the url of the newly persisted file
+attachment.url
+```
 
 ## Development
 

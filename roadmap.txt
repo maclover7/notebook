@@ -1,0 +1,8 @@
+Attachment
+* upload
+  * clean up public/ directory in specs
+* url
+* delete
+
+Filesystem
+* delete

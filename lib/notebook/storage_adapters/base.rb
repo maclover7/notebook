@@ -1,6 +1,10 @@
 module Notebook
   module StorageAdapters
     class Base
+      def initialize(attachment, options = {})
+        @attachment = attachment
+      end
+
       def delete
         raise(
           NotImplementedError,
@@ -21,6 +25,10 @@ module Notebook
           "Compliant Notebook storage adapters should define the `upload` method",
         )
       end
+
+      protected
+
+      attr_reader :attachment
     end
   end
 end
