@@ -1,5 +1,5 @@
 require "notebook/version"
 
 module Notebook
-  # Your code goes here...
+  autoload :StorageAdapter, 'notebook/storage_adapter'
 end
