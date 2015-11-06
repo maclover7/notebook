@@ -14,6 +14,8 @@ class SpecHelper
   end
 end
 
+Notebook.public_directory = ROOT + 'spec/fixtures/public'
+
 RSpec.configure do |config|
   # Clean up spec/fixtures/public
   config.before :each do
