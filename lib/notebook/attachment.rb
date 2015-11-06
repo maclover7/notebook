@@ -6,6 +6,10 @@ module Notebook
       @file = file
     end
 
+    def delete
+      adapter.delete
+    end
+
     def upload
       adapter.upload
     end

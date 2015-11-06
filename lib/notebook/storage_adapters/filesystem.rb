@@ -8,6 +8,10 @@ module Notebook
         @storage_directory = options.fetch("storage_directory", Pathname.pwd + 'spec/fixtures/public')
       end
 
+      def delete
+        !!FileUtils.remove(url)
+      end
+
       def upload
         # When this command is successful, it returns nil
         FileUtils.copy(attachment.file, @storage_directory).nil?
@@ -15,10 +19,6 @@ module Notebook
 
       def url
         (@storage_directory + File.basename(attachment.file)).to_s
-      end
-
-      def delete
-        true
       end
     end
   end
