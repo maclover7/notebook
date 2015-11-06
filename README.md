@@ -30,7 +30,6 @@ gem "notebook"
 
 ```
 file = File.read("avatar.jpg")
-Notebook.storage_adapter = :filesystem
 attachment = Notebook::Attachment.new(file)
 
 attachment.upload
