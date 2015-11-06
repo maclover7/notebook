@@ -1,9 +1,12 @@
 require "spec_helper"
 
-describe Notebook::StorageAdapter do
+describe Notebook::StorageAdapters::Base do
+  class NotCompliantAdapter < Notebook::StorageAdapters::Base
+  end
+
   describe "#delete" do
     it "raises not implemented error" do
-      storage_adapter = Notebook::StorageAdapter.new
+      storage_adapter = NotCompliantAdapter.new
 
       expect do
         storage_adapter.delete
@@ -16,7 +19,7 @@ describe Notebook::StorageAdapter do
 
   describe "#get" do
     it "raises not implemented error" do
-      storage_adapter = Notebook::StorageAdapter.new
+      storage_adapter = NotCompliantAdapter.new
 
       expect do
         storage_adapter.get
@@ -29,7 +32,7 @@ describe Notebook::StorageAdapter do
 
   describe "#upload" do
     it "raises not implemented error" do
-      storage_adapter = Notebook::StorageAdapter.new
+      storage_adapter = NotCompliantAdapter.new
 
       expect do
         storage_adapter.upload
