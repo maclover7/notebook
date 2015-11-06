@@ -5,14 +5,16 @@ module Notebook
     class Filesystem < Base
       def initialize(attachment, options = {})
         super
-        public_directory = Pathname.pwd + 'public'
-        @storage_directory = options.fetch("storage_directory", public_directory)
+        @storage_directory = options.fetch("storage_directory", Pathname.pwd + 'spec/fixtures/public')
       end
 
-      # Should be receiving an IO like object,
-      # can be File, StringIO, etc.
       def upload
+        # When this command is successful, it returns nil
         FileUtils.copy(attachment.file, @storage_directory).nil?
+      end
+
+      def url
+        (@storage_directory + File.basename(attachment.file)).to_s
       end
 
       def delete

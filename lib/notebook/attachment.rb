@@ -10,6 +10,10 @@ module Notebook
       adapter.upload
     end
 
+    def url
+      adapter.url
+    end
+
     private
 
     def adapter

@@ -2,19 +2,26 @@ require "spec_helper"
 
 describe Notebook::Attachment do
   describe "#upload" do
-    it "returns true" do
-      file_name = "avatar.png"
-      file = File.open file_path_for(file_name)
+    it "persists the file and returns true" do
+      file = File.open(SpecHelper.fixture_directory + "avatar.png")
       attachment = Notebook::Attachment.new(file)
 
       result = attachment.upload
 
       expect(result).to eq(true)
-      expect(File.exist?("public/#{file_name}")).to eq(true)
+      expect(File.exist?("spec/fixtures/public/avatar.png")).to eq(true)
     end
   end
 
-  def file_path_for(file_name)
-    SpecHelper.fixture_directory + file_name
+  describe "#url" do
+    it "returns the path to the attachment" do
+      file = File.open(SpecHelper.fixture_directory + "avatar.png")
+      attachment = Notebook::Attachment.new(file)
+      attachment.upload
+
+      result = attachment.url
+
+      expect(result).to eq((Pathname.pwd + "spec/fixtures/public/avatar.png").to_s)
+    end
   end
 end

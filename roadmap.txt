@@ -1,8 +1,13 @@
 Attachment
 * upload
-  * clean up public/ directory in specs
-* url
+  * storage_directory in FilesystemAdapter should be configurable (now it's hardwired to write in spec/fixtures)
 * delete
 
 Filesystem
 * delete
+
+---
+
+* S3 StorageAdapter
+* Rails helpers
+* `before_upload` and `after_upload`

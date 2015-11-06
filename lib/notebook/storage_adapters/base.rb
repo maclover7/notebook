@@ -1,7 +1,7 @@
 module Notebook
   module StorageAdapters
     class Base
-      def initialize(attachment, options = {})
+      def initialize(attachment, _options = {})
         @attachment = attachment
       end
 
