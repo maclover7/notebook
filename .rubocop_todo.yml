@@ -4,3 +4,7 @@ Style/DoubleNegation:
   Enabled: false
 Style/LineLength:
   Max: 110
+Style/MethodLength:
+  Max: 15
+Style/SymbolProc:
+  Enabled: false

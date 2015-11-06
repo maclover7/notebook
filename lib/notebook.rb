@@ -1,6 +1,8 @@
 require 'pathname'
 require 'notebook/version'
 
+require 'notebook/rails/engine' if defined?(Rails)
+
 module Notebook
   autoload :Attachment, 'notebook/attachment'
   autoload :StorageAdapters, 'notebook/storage_adapters'
