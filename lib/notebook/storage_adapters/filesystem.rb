@@ -5,7 +5,7 @@ module Notebook
     class Filesystem < Base
       def initialize(attachment, options = {})
         super
-        @storage_directory = options.fetch("storage_directory", Notebook.public_directory)
+        @storage_directory = options.fetch('storage_directory', Notebook.public_directory)
       end
 
       def delete

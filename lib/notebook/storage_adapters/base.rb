@@ -6,23 +6,23 @@ module Notebook
       end
 
       def delete
-        raise(
+        fail(
           NotImplementedError,
-          "Compliant Notebook storage adapters should define the `delete` method",
+          'Compliant Notebook storage adapters should define the `delete` method'
         )
       end
 
       def get
-        raise(
+        fail(
           NotImplementedError,
-          "Compliant Notebook storage adapters should define the `get` method",
+          'Compliant Notebook storage adapters should define the `get` method'
         )
       end
 
       def upload
-        raise(
+        fail(
           NotImplementedError,
-          "Compliant Notebook storage adapters should define the `upload` method",
+          'Compliant Notebook storage adapters should define the `upload` method'
         )
       end
 

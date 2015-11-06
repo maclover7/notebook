@@ -1,5 +1,5 @@
 require 'pathname'
-require "notebook/version"
+require 'notebook/version'
 
 module Notebook
   autoload :Attachment, 'notebook/attachment'
