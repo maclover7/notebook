@@ -2,9 +2,8 @@
 
 [![Build Status](https://travis-ci.org/moss-rb/notebook.svg?branch=master)](https://travis-ci.org/moss-rb/notebook?branch=master)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/notebook`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Notebook is a Ruby file attachment library, that has easy integration
+with Rails and ActiveRecord.
 
 ## Installation
 
@@ -22,34 +21,89 @@ Or install it yourself as:
 
     $ gem install notebook
 
-## Usage
+## Rails Quickstart
 
-```
-gem "notebook"
+### Models
+
+**Rails 4**
+
+```ruby
+class User < ActiveRecord::Base
+  notebook_attachment :profile_picture
+end
 ```
 
+### Edit and New Views
+
+```erb
+<%= form_for @user, url: users_path, html: { multipart: true } do |form| %>
+  <%= form.file_field :avatar %>
+<% end %>
 ```
+
+### Controller
+
+**Rails 4**
+
+```ruby
+def create
+  @user = User.create(user_params)
+end
+
+private
+def user_params
+  params.require(:user).permit(:avatar)
+end
+```
+
+### Show View
+
+```erb
+<%= image_tag @user.avatar.url %>
+```
+
+### Deleting an Attachment
+
+Set the attribute to `nil` and save.
+
+```ruby
+@user.avatar = nil
+@user.save
+```
+
+### Configuration
+To use a different storage location than /public, create a
+`config/initializers/notebook.rb`, and then set the following:
+
+```ruby
+Notebook.public_directory = 'hi'
+```
+
+## Plain Old Ruby
+
+It's awesome you want to use plain Ruby without Rails with Notebook!
+
+First off, you need to read in a file, and create a new
+`Notebook::Attachment` object, like so:
+
+```ruby
 file = File.read("avatar.jpg")
 attachment = Notebook::Attachment.new(file)
+```
 
+The last and final step is to just upload it!
+```ruby
 attachment.upload
 
 # get the url of the newly persisted file
 attachment.url
 ```
 
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/notebook. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/moss-rb/notebook. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
 
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
