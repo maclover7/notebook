@@ -34,6 +34,10 @@ module Notebook
         @file_object.upload_file(attachment.file.path)
       end
 
+      def url
+        @bucket.object(@s3_file_key).presigned_url(:get)
+      end
+
       private
 
       def check_valid_credentials

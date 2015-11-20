@@ -98,6 +98,21 @@ describe Notebook::StorageAdapters::S3 do
         expect(result).to eq(true)
       end
     end
+
+    describe '#url' do
+      it 'returns the path to the attachment' do
+        file = File.open(SpecHelper.fixture_directory + 'avatar.png')
+        attachment = Notebook::Attachment.new(file)
+        adapter = Notebook::StorageAdapters::S3.new(attachment)
+        adapter.upload
+
+        result = adapter.url
+
+        expect(result).to_not eq(nil)
+        expect(result).to include('https://moss-notebook-test.s3.amazonaws.com')
+        expect(result).to include('avatar.png')
+      end
+    end
   end
 
   describe '#s3_options' do
