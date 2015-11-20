@@ -24,6 +24,10 @@ module Notebook
         setup_s3
       end
 
+      def delete
+        @bucket.object(@s3_file_key).delete
+      end
+
       def upload
         @s3_file_key = "#{SecureRandom.uuid}/#{File.basename(attachment.file)}"
         @file_object = @bucket.object(@s3_file_key)

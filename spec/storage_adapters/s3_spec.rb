@@ -27,6 +27,44 @@ describe Notebook::StorageAdapters::S3 do
       end
     end
 
+    describe '#delete' do
+      before do
+        @s3_options = { access_key_id: ENV['NOTEBOOK_AWS_ACCESS_KEY_ID'],
+                        bucket: ENV['NOTEBOOK_AWS_BUCKET'],
+                        region: ENV['NOTEBOOK_AWS_REGION'],
+                        secret_access_key: ENV['NOTEBOOK_AWS_SECRET_ACCESS_KEY'] }
+        Notebook.s3_options = @s3_options
+      end
+
+      it 'returns true' do
+        file = File.open(SpecHelper.fixture_directory + 'avatar.png')
+        attachment = Notebook::Attachment.new(file)
+        adapter = Notebook::StorageAdapters::S3.new(attachment)
+        adapter.upload
+
+        result = adapter.delete
+
+        expect(result).to_not eq(nil)
+      end
+
+      it "deletes the attachment's file" do
+        file = File.open(SpecHelper.fixture_directory + 'avatar.png')
+        attachment = Notebook::Attachment.new(file)
+        adapter = Notebook::StorageAdapters::S3.new(attachment)
+        adapter.upload
+
+        @credentials = Aws::Credentials.new(@s3_options[:access_key_id], @s3_options[:secret_access_key])
+        @s3 = Aws::S3::Resource.new(credentials: @credentials, region: @s3_options[:region])
+        @bucket = @s3.bucket(@s3_options[:bucket])
+
+        adapter.delete
+
+        result = @bucket.object(adapter.s3_file_key).exists?
+
+        expect(result).to eq(false)
+      end
+    end
+
     describe '#upload' do
       before do
         @s3_options = { access_key_id: ENV['NOTEBOOK_AWS_ACCESS_KEY_ID'],
