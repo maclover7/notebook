@@ -79,6 +79,17 @@ To use a different storage location than /public, create a
 Notebook.public_directory = 'hi'
 ```
 
+To store your upload files in a different place than the filesystem,
+create a `config/initializers/notebook.rb`, then set the following:
+
+```ruby
+# these are the two out of the box storage adapters
+# to use one from another source, just place the constant of a
+compliant adapter here.
+Notebook.adapter = Notebook::StorageAdapters::Filesystem
+Notebook.adapter = Notebook::StorageAdapters::S3
+```
+
 ## Plain Old Ruby
 
 It's awesome you want to use plain Ruby without Rails with Notebook!
