@@ -19,9 +19,9 @@ describe Notebook do
 
     it 'sets correctly' do
       @s3_options = { access_key_id: ENV['NOTEBOOK_AWS_ACCESS_KEY_ID'],
-                  bucket: ENV['NOTEBOOK_AWS_BUCKET'],
-                  region: ENV['NOTEBOOK_AWS_REGION'],
-                  secret_access_key: ENV['NOTEBOOK_AWS_SECRET_ACCESS_KEY'] }
+                      bucket: ENV['NOTEBOOK_AWS_BUCKET'],
+                      region: ENV['NOTEBOOK_AWS_REGION'],
+                      secret_access_key: ENV['NOTEBOOK_AWS_SECRET_ACCESS_KEY'] }
       Notebook.s3_options = @s3_options
       #--
       adapter = Notebook::StorageAdapters::S3
