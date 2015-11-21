@@ -21,7 +21,7 @@ module Notebook
     private
 
     def adapter
-      StorageAdapters::Filesystem.new(self)
+      Notebook.adapter.new(self)
     end
   end
 end
