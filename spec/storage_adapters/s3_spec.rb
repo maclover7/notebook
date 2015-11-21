@@ -1,5 +1,25 @@
 require 'spec_helper'
 
+def setup_s3_client
+  @credentials = Aws::Credentials.new(@s3_options[:access_key_id], @s3_options[:secret_access_key])
+  @s3 = Aws::S3::Resource.new(credentials: @credentials, region: @s3_options[:region])
+  @bucket = @s3.bucket(@s3_options[:bucket])
+end
+
+def setup_s3_options
+  @s3_options = { access_key_id: ENV['NOTEBOOK_AWS_ACCESS_KEY_ID'],
+                  bucket: ENV['NOTEBOOK_AWS_BUCKET'],
+                  region: ENV['NOTEBOOK_AWS_REGION'],
+                  secret_access_key: ENV['NOTEBOOK_AWS_SECRET_ACCESS_KEY'] }
+  Notebook.s3_options = @s3_options
+end
+
+def upload_avatar
+  @file = File.open(SpecHelper.fixture_directory + 'avatar.png')
+  @attachment = Notebook::Attachment.new(@file)
+  @adapter = Notebook::StorageAdapters::S3.new(@attachment)
+end
+
 describe Notebook::StorageAdapters::S3 do
   describe '#intialize' do
     context 'insufficient hash keys' do
@@ -14,10 +34,11 @@ describe Notebook::StorageAdapters::S3 do
     end
 
     context 'sufficient hash keys' do
-      it 'does not raise error' do
-        s3_options = { access_key_id: 'hi', bucket: 'hi', region: 'hi', secret_access_key: 'hi' }
-        Notebook.s3_options = s3_options
+      before do
+        setup_s3_options
+      end
 
+      it 'does not raise error' do
         expect do
           Notebook::StorageAdapters::S3.new(double)
         end.to_not raise_exception(
@@ -29,37 +50,22 @@ describe Notebook::StorageAdapters::S3 do
 
     describe '#delete' do
       before do
-        @s3_options = { access_key_id: ENV['NOTEBOOK_AWS_ACCESS_KEY_ID'],
-                        bucket: ENV['NOTEBOOK_AWS_BUCKET'],
-                        region: ENV['NOTEBOOK_AWS_REGION'],
-                        secret_access_key: ENV['NOTEBOOK_AWS_SECRET_ACCESS_KEY'] }
-        Notebook.s3_options = @s3_options
+        setup_s3_options
+        upload_avatar
+        @adapter.upload
       end
 
       it 'returns true' do
-        file = File.open(SpecHelper.fixture_directory + 'avatar.png')
-        attachment = Notebook::Attachment.new(file)
-        adapter = Notebook::StorageAdapters::S3.new(attachment)
-        adapter.upload
-
-        result = adapter.delete
+        result = @adapter.delete
 
         expect(result).to_not eq(nil)
       end
 
       it "deletes the attachment's file" do
-        file = File.open(SpecHelper.fixture_directory + 'avatar.png')
-        attachment = Notebook::Attachment.new(file)
-        adapter = Notebook::StorageAdapters::S3.new(attachment)
-        adapter.upload
+        setup_s3_client
+        @adapter.delete
 
-        @credentials = Aws::Credentials.new(@s3_options[:access_key_id], @s3_options[:secret_access_key])
-        @s3 = Aws::S3::Resource.new(credentials: @credentials, region: @s3_options[:region])
-        @bucket = @s3.bucket(@s3_options[:bucket])
-
-        adapter.delete
-
-        result = @bucket.object(adapter.s3_file_key).exists?
+        result = @bucket.object(@adapter.s3_file_key).exists?
 
         expect(result).to eq(false)
       end
@@ -67,46 +73,34 @@ describe Notebook::StorageAdapters::S3 do
 
     describe '#upload' do
       before do
-        @s3_options = { access_key_id: ENV['NOTEBOOK_AWS_ACCESS_KEY_ID'],
-                        bucket: ENV['NOTEBOOK_AWS_BUCKET'],
-                        region: ENV['NOTEBOOK_AWS_REGION'],
-                        secret_access_key: ENV['NOTEBOOK_AWS_SECRET_ACCESS_KEY'] }
-        Notebook.s3_options = @s3_options
+        setup_s3_options
+        upload_avatar
       end
 
       it 'returns true' do
-        file = File.open(SpecHelper.fixture_directory + 'avatar.png')
-        attachment = Notebook::Attachment.new(file)
-        adapter = Notebook::StorageAdapters::S3.new(attachment)
-
-        result = adapter.upload
+        result = @adapter.upload
         expect(result).to eq(true)
       end
 
       it 'persists the file' do
-        file = File.open(SpecHelper.fixture_directory + 'avatar.png')
-        attachment = Notebook::Attachment.new(file)
-        adapter = Notebook::StorageAdapters::S3.new(attachment)
-        adapter.upload
+        setup_s3_client
+        @adapter.upload
 
-        @credentials = Aws::Credentials.new(@s3_options[:access_key_id], @s3_options[:secret_access_key])
-        @s3 = Aws::S3::Resource.new(credentials: @credentials, region: @s3_options[:region])
-        @bucket = @s3.bucket(@s3_options[:bucket])
-
-        result = @bucket.object(adapter.s3_file_key).exists?
+        result = @bucket.object(@adapter.s3_file_key).exists?
 
         expect(result).to eq(true)
       end
     end
 
     describe '#url' do
-      it 'returns the path to the attachment' do
-        file = File.open(SpecHelper.fixture_directory + 'avatar.png')
-        attachment = Notebook::Attachment.new(file)
-        adapter = Notebook::StorageAdapters::S3.new(attachment)
-        adapter.upload
+      before do
+        setup_s3_options
+        upload_avatar
+        @adapter.upload
+      end
 
-        result = adapter.url
+      it 'returns the path to the attachment' do
+        result = @adapter.url
 
         expect(result).to_not eq(nil)
         expect(result).to include('https://moss-notebook-test.s3.amazonaws.com')
