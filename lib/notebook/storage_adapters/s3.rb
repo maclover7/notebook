@@ -18,7 +18,6 @@ module Notebook
 
       def initialize(attachment, options = {})
         super
-        @storage_directory = options.fetch('storage_directory', Notebook.public_directory)
         #--
         check_valid_credentials
         setup_s3
