@@ -1,6 +1,2 @@
-* Global gem configuration
-  * filesystem --> storage_directory in FilesystemAdapter should be configurable (now it's hardwired to write in spec/fixtures)
 * Rails helpers
   * `before_upload` and `after_upload`
-* S3 StorageAdapter
-  * refactor tests per Tute
